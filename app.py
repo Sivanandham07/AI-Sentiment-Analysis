@@ -10,9 +10,7 @@ from typing import Optional
 import pandas as pd
 import streamlit as st
 
-# NOTE: The following modules (analyzer, charts, utils) define the contract
-# this file relies on. They are generated in subsequent steps but the
-# interface below is final and will not change.
+
 from analyzer import (
     AnalysisTimeoutError,
     AnalyzerError,
@@ -35,10 +33,6 @@ from utils import (
     validate_text_input,
 )
 
-# --------------------------------------------------------------------------
-# Constants
-# --------------------------------------------------------------------------
-
 APP_TITLE: str = "AI-Powered Sentiment Analysis"
 APP_ICON: str = "💬"
 RESULT_COLUMNS = [
@@ -50,10 +44,6 @@ RESULT_COLUMNS = [
     "Suggested Response",
 ]
 
-# Light theme palette. Kept as constants so colors stay consistent between
-# the CSS injected below and any future custom components/charts.
-# Off-white background + a softer (not pure-black) text color reads as much
-# easier on the eyes than stark white + near-black.
 COLOR_BG = "#FAFAF9"
 COLOR_SURFACE = "#F1F3F5"
 COLOR_BORDER = "#E2E4E8"
@@ -63,9 +53,6 @@ COLOR_PRIMARY = "#2563EB"
 COLOR_PRIMARY_HOVER = "#1D4ED8"
 
 
-# --------------------------------------------------------------------------
-# Page configuration (must be the first Streamlit call)
-# --------------------------------------------------------------------------
 
 st.set_page_config(
     page_title=APP_TITLE,
@@ -74,10 +61,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-
-# --------------------------------------------------------------------------
-# Light theme styling
-# --------------------------------------------------------------------------
 
 def inject_custom_css() -> None:
     """Inject CSS overrides so the app renders as a clean light-mode UI.
@@ -227,10 +210,6 @@ def inject_custom_css() -> None:
     )
 
 
-# --------------------------------------------------------------------------
-# Session state initialization
-# --------------------------------------------------------------------------
-
 def initialize_session_state() -> None:
     """Ensure all session-state keys used by this app exist with sane defaults.
 
@@ -239,23 +218,16 @@ def initialize_session_state() -> None:
     `st.session_state` rather than a plain local variable.
     """
     if "analyzed_df" not in st.session_state:
-        # Holds the DataFrame produced by CSV batch analysis, used by both
-        # the "CSV Batch Analysis" tab (for download) and the "Dashboard"
-        # tab (for charts/metrics).
+        
         st.session_state.analyzed_df = None
 
     if "uploaded_file_name" not in st.session_state:
         st.session_state.uploaded_file_name = None
 
     if "single_result" not in st.session_state:
-        # Holds the most recent single-text analysis result so it survives
-        # minor reruns (e.g. widget interactions elsewhere on the page).
+        
         st.session_state.single_result = None
 
-
-# --------------------------------------------------------------------------
-# Cached analyzer loader
-# --------------------------------------------------------------------------
 
 @st.cache_resource(show_spinner=False)
 def load_analyzer():
@@ -291,9 +263,6 @@ def get_analyzer_safe():
         return None, f"Failed to initialize the AI analyzer: {exc}"
 
 
-# --------------------------------------------------------------------------
-# Sidebar
-# --------------------------------------------------------------------------
 
 def render_sidebar() -> None:
     """Render the sidebar with app branding, status, and instructions."""
@@ -306,7 +275,6 @@ def render_sidebar() -> None:
 
         st.divider()
 
-        # --- API key / configuration status -------------------------------
         st.markdown("### ⚙️ Configuration Status")
         if check_api_key_configured():
             st.success("API key detected", icon="✅")
@@ -319,7 +287,6 @@ def render_sidebar() -> None:
 
         st.divider()
 
-        # --- How to use ------------------------------------------------------
         st.markdown("### 📖 How to Use")
         st.markdown(
             "- **Single Text Analysis**: paste one review and get instant "
@@ -336,9 +303,6 @@ def render_sidebar() -> None:
         st.caption("© 2025 · Portfolio Project")
 
 
-# --------------------------------------------------------------------------
-# Tab 1: Single Text Analysis
-# --------------------------------------------------------------------------
 
 def render_single_text_tab() -> None:
     """Render the UI for analyzing a single piece of text on demand."""
@@ -404,8 +368,7 @@ def render_single_text_tab() -> None:
                 st.error(f"An unexpected error occurred: {exc}", icon="❌")
                 return
 
-    # Render the most recent result, if one exists, so it persists across
-    # unrelated reruns (e.g. sidebar interactions).
+ 
     if st.session_state.single_result:
         render_single_result(st.session_state.single_result)
 
@@ -450,10 +413,6 @@ def render_single_result(result: dict) -> None:
         st.write(result.get("suggested_response", "No suggestion available."))
 
 
-# --------------------------------------------------------------------------
-# Tab 2: CSV Batch Analysis
-# --------------------------------------------------------------------------
-
 def render_csv_batch_tab() -> None:
     """Render the UI for uploading and analyzing a CSV of reviews."""
     st.subheader("📂 CSV Batch Analysis")
@@ -488,9 +447,7 @@ def render_csv_batch_tab() -> None:
     with st.expander("Preview uploaded data"):
         st.dataframe(raw_df.head(10), use_container_width=True)
 
-    # Let the user choose which column contains the review text. We suggest
-    # the most likely candidate first (e.g. a column literally named
-    # "review" or "text"), but the user has full control.
+
     candidate_columns = get_text_column_candidates(raw_df)
     text_column = st.selectbox(
         "Which column contains the review text?",
@@ -558,8 +515,7 @@ def render_csv_batch_tab() -> None:
             status_placeholder.error(f"An unexpected error occurred: {exc}", icon="❌")
             return
 
-    # If we have a previously analyzed DataFrame (from this upload or a
-    # prior one), show the results table and download button.
+
     if st.session_state.analyzed_df is not None:
         st.markdown("### 📋 Analyzed Results")
         st.dataframe(st.session_state.analyzed_df, use_container_width=True)
@@ -579,9 +535,6 @@ def render_csv_batch_tab() -> None:
         )
 
 
-# --------------------------------------------------------------------------
-# Tab 3: Dashboard
-# --------------------------------------------------------------------------
 
 def render_dashboard_tab() -> None:
     """Render sentiment/emotion visualizations for the analyzed CSV data."""
@@ -628,9 +581,6 @@ def render_dashboard_tab() -> None:
     )
 
 
-# --------------------------------------------------------------------------
-# Main application entry point
-# --------------------------------------------------------------------------
 
 def main() -> None:
     """Application entry point: wires up session state, sidebar, and tabs."""
