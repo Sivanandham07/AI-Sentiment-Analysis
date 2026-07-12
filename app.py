@@ -1,32 +1,9 @@
 """
-app.py
-======
 
-Main entry point for the AI-Powered Sentiment Analysis Streamlit application.
-
-This module is responsible ONLY for presentation and orchestration:
-    * Rendering the Streamlit UI (sidebar, tabs, widgets, messages).
-    * Managing Streamlit session state across reruns.
-    * Calling into the `analyzer` abstraction layer to perform sentiment
-      analysis (never talking to the Gemini/OpenAI/Claude SDKs directly).
-    * Calling into `charts` to render Plotly visualizations.
-    * Calling into `utils` for validation and data-wrangling helpers.
-
-Design decisions:
-    * All AI calls are wrapped in try/except blocks that catch the custom
-      exceptions raised by `analyzer.py`. This means the UI never crashes
-      on a bad API key, timeout, rate limit, or network failure -- the user
-      always sees a friendly, actionable message instead of a stack trace.
-    * The Gemini client is created once and cached via `st.cache_resource`
-      so we don't re-authenticate on every widget interaction/rerun.
-    * Analyzed results are stored in `st.session_state` so that switching
-      between tabs (e.g. from "CSV Batch Analysis" to "Dashboard") does not
-      lose previously computed results.
-    * The UI uses a clean, light color palette (see `inject_custom_css`)
-      instead of Streamlit's dark theme. Colors are also mirrored in
-      `.streamlit/config.toml` so the light theme applies even before the
-      page renders.
+Main Streamlit application for the AI-Powered Sentiment Analysis project, responsible for rendering the user interface and managing application workflow.
+Handles user interactions, invokes the AI analyzer and visualization modules, and provides robust error handling with persistent session state.
 """
+
 
 from typing import Optional
 

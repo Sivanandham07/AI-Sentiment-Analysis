@@ -1,19 +1,7 @@
 """
-utils.py
-========
-
-General-purpose helper functions for the Sentiment Analyzer application.
-
-This module intentionally has NO dependency on Streamlit or any AI SDK
-(Gemini/OpenAI/Claude). It only handles:
-    * Configuration/environment checks
-    * Input validation (text and DataFrames)
-    * Data-wrangling helpers (column detection, CSV export, summary stats)
-
-Keeping this module dependency-light means every function here can be
-unit-tested in isolation, without mocking a UI or an AI provider.
+Provides utility functions for configuration, input validation, and data processing used throughout the Sentiment Analyzer application.
+Includes reusable helpers for environment management, CSV handling, and summary statistics while remaining independent of the UI and AI provider.
 """
-
 import os
 from typing import List, Tuple
 

@@ -1,25 +1,6 @@
 """
-analyzer.py
-===========
-
-AI abstraction layer for the Sentiment Analyzer application.
-
-This module defines a provider-agnostic interface (`BaseSentimentAnalyzer`)
-for performing sentiment analysis, along with a concrete implementation
-backed by Google's Gemini API (`GeminiSentimentAnalyzer`).
-
-The rest of the application (`app.py`) interacts ONLY with:
-    * `get_analyzer()`      -- factory that returns the configured analyzer
-    * The custom exceptions defined below
-
-This means switching the underlying AI provider (e.g. to OpenAI or Claude)
-requires changes ONLY in this file:
-    1. Create a new class, e.g. `OpenAISentimentAnalyzer(BaseSentimentAnalyzer)`,
-       implementing `analyze_text` and `analyze_dataframe`.
-    2. Add one branch to `get_analyzer()` to instantiate it based on the
-       `AI_PROVIDER` environment variable.
-
-No other file needs to know an AI provider was ever changed.
+Provides a provider-independent AI abstraction layer for sentiment analysis, with a Gemini implementation and a common interface for the application.
+Enables seamless switching between AI providers (e.g., Gemini, OpenAI, Claude) by requiring changes only within this module.
 """
 
 import json

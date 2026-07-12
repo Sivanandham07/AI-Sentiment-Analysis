@@ -1,19 +1,7 @@
 """
-charts.py
-=========
-
-Plotly chart-building functions for the Sentiment Analyzer dashboard.
-
-Every function in this module is a pure function: it takes an analyzed
-pandas DataFrame and returns a `plotly.graph_objects.Figure`. None of these
-functions call Streamlit directly, which keeps them reusable and easy to
-unit test in isolation from the UI.
-
-These functions assume the DataFrame has already been produced by
-`analyzer.py`'s `analyze_dataframe()`, and therefore contains "Sentiment"
-and "Emotion" columns.
+Provides reusable Plotly chart functions for visualizing sentiment and emotion analysis results in the dashboard.
+Generates interactive figures from analyzed data without depending on Streamlit, ensuring modularity and reusability.
 """
-
 from typing import Dict
 
 import pandas as pd
