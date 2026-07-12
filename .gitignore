@@ -1,0 +1,21 @@
+# Environment variables (contains real API keys -- never commit this)
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS / editor cruft
+.DS_Store
+.vscode/
+.idea/
+
+# Downloaded/analyzed CSVs generated at runtime (not part of the repo)
+analyzed_*.csv
